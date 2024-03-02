@@ -1,2 +1,3 @@
 import register from './register';
-export default [register];
+import login from './login';
+export default [register, login];

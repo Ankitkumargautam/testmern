@@ -1,3 +1,3 @@
-import register from './authentication';
+import authentication from './authentication';
 
-export default [...register];
+export default [...authentication];

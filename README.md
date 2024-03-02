@@ -7,3 +7,5 @@
 2. register api
 
 3. login api
+
+4. frontend ui for login and signup

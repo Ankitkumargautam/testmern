@@ -3,8 +3,14 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './style.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { ContextState } from '../../Context/ContextProvider';
+import { toast } from 'react-toastify';
 
 const Register = ({ setShowLogin }) => {
+  const navigate = useNavigate();
+  const { setUser } = ContextState();
+
   const initialValues = {
     name: '',
     email: '',
@@ -22,12 +28,20 @@ const Register = ({ setShowLogin }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     // Handle form submission here
     console.log(values);
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_BASEURL}/api/register`,
-      values
-    );
-    console.log('data: ', data);
-    setSubmitting(false);
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BASEURL}/api/register`,
+        values
+      );
+      toast(data?.message);
+      console.log('data: ', data);
+      localStorage.setItem('userInfo', JSON.stringify(data.data));
+      setUser(data.data);
+      setSubmitting(false);
+      navigate('/employee');
+    } catch (error) {
+      toast(error?.response?.data?.message);
+    }
   };
 
   return (
@@ -60,7 +74,7 @@ const Register = ({ setShowLogin }) => {
             />
             <div className="register-field">
               <label>Password</label>
-              <Field type="password" name="password" placeholder="password" />
+              <Field type="text" name="password" placeholder="password" />
             </div>
             <ErrorMessage
               name="password"

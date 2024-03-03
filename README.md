@@ -15,3 +15,7 @@
 6. Apply joi validation in backend
 
 7. Multiple page routing in frontend
+
+8. On login set user for whole application using context api
+
+9. make use of react-toastify for toast notification

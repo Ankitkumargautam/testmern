@@ -23,7 +23,7 @@ const Login = ({ setShowLogin }) => {
       `${process.env.REACT_APP_BASEURL}/api/login`,
       values
     );
-    console.log('data: ', data);
+    console.log('data: ', data.data);
     setSubmitting(false);
   };
   return (

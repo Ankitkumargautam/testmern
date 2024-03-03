@@ -13,3 +13,5 @@
 5. Formik form validation with login and register api implementation
 
 6. Apply joi validation in backend
+
+7. Multiple page routing in frontend

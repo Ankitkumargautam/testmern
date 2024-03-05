@@ -8,9 +8,9 @@ const Home = () => {
   return (
     <div className="home">
       {showLogin ? (
-        <Login setShowLogin={setShowLogin} />
-      ) : (
         <Register setShowLogin={setShowLogin} />
+      ) : (
+        <Login setShowLogin={setShowLogin} />
       )}
     </div>
   );

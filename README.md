@@ -21,3 +21,5 @@
 9. make use of react-toastify for toast notification
 
 10. Apply route protection
+
+11. create a protected route in backend

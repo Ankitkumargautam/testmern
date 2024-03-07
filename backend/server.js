@@ -14,14 +14,16 @@ app.use('/api', routes);
 
 const port = process.env.PORT || 5000;
 
-try {
-  mongoose.connect(process.env.DBString, {
+mongoose
+  .connect(process.env.DBString, {
     useUnifiedTopology: true,
     useCreateIndex: true,
     useNewUrlParser: true,
+  })
+  .then(() => {
+    app.listen(port, console.log('Server is running on: ', port));
+  })
+  .catch((error) => {
+    console.log('Server error: ', error);
+    process.exit();
   });
-  app.listen(port, console.log('Server is running on: ', port));
-} catch (error) {
-  console.log('Server error: ', error);
-  process.exit();
-}

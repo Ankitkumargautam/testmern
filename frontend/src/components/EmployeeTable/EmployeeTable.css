@@ -1,0 +1,33 @@
+.employee-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employee-table th,
+.employee-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.employee-table th {
+  background-color: #f2f2f2;
+}
+
+.employee-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.employee-table tr:hover {
+  background-color: #ddd;
+}
+
+.employee-table button {
+  margin-right: 5px;
+  cursor: pointer;
+}

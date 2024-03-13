@@ -1,0 +1,17 @@
+.create-employee-button {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.create-employee-button button {
+  width: max-content;
+  font-size: 18px;
+  color: black;
+  background: white;
+  box-shadow: 0 0 2px black;
+}
+
+.create-employee-button button:hover {
+  color: white;
+  background: black;
+}

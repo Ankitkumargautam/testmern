@@ -23,3 +23,7 @@
 10. Apply route protection
 
 11. create a protected route in backend
+
+12. backend crud with joi error middleware
+
+13. implemented crud api with frontend

@@ -1,2 +1,6 @@
 import getAllEmployee from './getAllEmployee';
-export default [getAllEmployee];
+import createEmployee from './createEmployee';
+import updateEmployee from './updateEmployee';
+import removeEmployee from './removeEmployee';
+
+export default [getAllEmployee, createEmployee, updateEmployee, removeEmployee];

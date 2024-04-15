@@ -27,3 +27,5 @@
 12. backend crud with joi error middleware
 
 13. implemented crud api with frontend
+
+14. make a api to show employee with pagination and search capacity

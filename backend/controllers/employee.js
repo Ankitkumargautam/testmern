@@ -118,3 +118,65 @@ export const removeEmployee = async (req, res) => {
       .json({ status: 400, message: 'Employee not removed' });
   }
 };
+
+export const getEmpPage = async (req, res) => {
+  try {
+    console.log('querys: ', req.query);
+    const payload = req.query;
+
+    const page = parseInt(payload.page, 10) || 1; // Convert to number and default to 1
+    const limit = parseInt(payload.limit, 10) || 10; // Convert to number and default to 10
+    const skip = (page - 1) * limit;
+
+    let sortDirection = parseInt(payload.sortValue, 10) || -1; // Convert to number and default to -1 for descending
+    const sortBy = payload.sortBy || 'createdAt'; // Default sorting by createdAt if sortBy is not provided
+
+    const query = [
+      { $match: { userId: req.user._id } },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
+          phone: 1,
+          userId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          insensitive: { $toLower: `$${sortBy}` }, // Project a new field "insensitive" with lowercased value of sortBy field
+        },
+      },
+      { $sort: { insensitive: sortDirection } }, // Sort based on the new field "insensitive"
+    ];
+
+    if (payload.search && payload.search !== '') {
+      const regex = new RegExp(payload.search, 'i');
+      query.push({
+        $match: {
+          $or: [{ name: { $regex: regex } }, { email: { $regex: regex } }],
+        },
+      });
+    }
+
+    const pagination = [{ $skip: skip }, { $limit: limit }];
+
+    const pipeline = query.concat(pagination); // Concatenate query and pagination arrays
+
+    console.log('Pipeline:', JSON.stringify(pipeline)); // Log the pipeline to inspect the stages
+
+    const employees = await Employee.aggregate(pipeline);
+
+    // Calculate total count without pagination
+    const total = await Employee.aggregate([...query, { $count: 'total' }]);
+    const totalCount = total.length > 0 ? total[0].total : 0;
+
+    return res.status(200).json({
+      status: 200,
+      data: employees,
+      message: 'All employees',
+      total: totalCount,
+    });
+  } catch (error) {
+    console.error('Error:', error); // Log any errors that occur
+    return res.status(400).json({ status: 400, message: 'Employee not found' });
+  }
+};

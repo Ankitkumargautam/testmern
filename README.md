@@ -29,3 +29,5 @@
 13. implemented crud api with frontend
 
 14. make a api to show employee with pagination and search capacity
+
+15. apply joi validation for query in backend

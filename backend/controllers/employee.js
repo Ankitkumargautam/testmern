@@ -121,7 +121,6 @@ export const removeEmployee = async (req, res) => {
 
 export const getEmpPage = async (req, res) => {
   try {
-    console.log('querys: ', req.query);
     const payload = req.query;
 
     const page = parseInt(payload.page, 10) || 1; // Convert to number and default to 1
@@ -160,8 +159,6 @@ export const getEmpPage = async (req, res) => {
     const pagination = [{ $skip: skip }, { $limit: limit }];
 
     const pipeline = query.concat(pagination); // Concatenate query and pagination arrays
-
-    console.log('Pipeline:', JSON.stringify(pipeline)); // Log the pipeline to inspect the stages
 
     const employees = await Employee.aggregate(pipeline);
 

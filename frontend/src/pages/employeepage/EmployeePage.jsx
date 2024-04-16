@@ -5,13 +5,18 @@ import { toast } from 'react-toastify';
 import EmployeeTable from '../../components/EmployeeTable/EmployeeTable';
 import './style.css';
 import Popup from '../../components/EmployeeTable/Popup/Popup';
+import Pagination from '../../components/Pagination/Pagination';
 
-const Employee = () => {
+const EmployeePage = () => {
   const { user } = ContextState();
 
   const [employeeData, setEmployeeData] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   useEffect(() => {
     if (user && user?.token) {
@@ -24,10 +29,17 @@ const Employee = () => {
       const getData = async () => {
         try {
           const { data } = await axios.get(
-            `${process.env.REACT_APP_BASEURL}/api/getAllEmployee`,
+            `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}`,
             config
           );
           setEmployeeData(data?.data);
+          // Calculate total pages based on total count and items per page
+          const totalCount = data.total;
+          const totalPages = Math.ceil(totalCount / itemsPerPage);
+          setTotalPages(totalPages);
+
+          console.log('data: ', data);
+          console.log('totalPages: ', totalPages);
         } catch (error) {
           toast.error(
             error?.response?.data?.message || 'Failed to fetch employee data'
@@ -38,7 +50,7 @@ const Employee = () => {
       getData();
     }
     // eslint-disable-next-line
-  }, [user && user?.token]);
+  }, [user?.token, currentPage]);
 
   const createHandler = () => {
     setShowCreatePopup(true);
@@ -47,10 +59,10 @@ const Employee = () => {
   return (
     <div>
       <h1>Employee</h1>
-      <a href="/employeePage">go to Employee page</a>
+      <a href="/employee">go to Employee</a>
 
       <div className="create-employee-button">
-        <button onClick={() => createHandler()}>Create an employee</button>
+        <button onClick={createHandler}>Create an employee</button>
       </div>
 
       {employeeData?.length === 0 ? (
@@ -63,6 +75,11 @@ const Employee = () => {
           setShowEditPopup={setShowEditPopup}
         />
       )}
+
+      <Pagination
+        itemsPerPage={itemsPerPage}
+        setItemsPerPage={setItemsPerPage}
+      />
 
       {showCreatePopup && (
         <Popup
@@ -80,4 +97,4 @@ const Employee = () => {
   );
 };
 
-export default Employee;
+export default EmployeePage;

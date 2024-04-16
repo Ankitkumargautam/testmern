@@ -31,3 +31,5 @@
 14. make a api to show employee with pagination and search capacity
 
 15. apply joi validation for query in backend
+
+16. create a new employee page with pagination ui

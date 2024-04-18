@@ -16,6 +16,7 @@ const Popup = ({
   setCurrentId,
   updateEmployeeData,
   setUpdateEmployeeData,
+  itemsPerPage,
 }) => {
   const popupRef = useRef(null);
 
@@ -64,7 +65,11 @@ const Popup = ({
           values,
           config
         );
-        setEmployeeData([data?.data, ...employeeData]);
+        if (employeeData.length < itemsPerPage) {
+          setEmployeeData([data?.data, ...employeeData]);
+        } else {
+          setEmployeeData([data?.data, ...employeeData.slice(0, -1)]);
+        }
         toast(data.message);
         setShowEditPopup(false);
       } else {

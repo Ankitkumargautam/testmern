@@ -33,3 +33,5 @@
 15. apply joi validation for query in backend
 
 16. create a new employee page with pagination ui
+
+17. implemented pagination functionality in frontend

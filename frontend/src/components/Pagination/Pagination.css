@@ -7,32 +7,42 @@
 }
 .pagination__container-limit-dropdown{
   padding: 2px 2px;
+  cursor: pointer;
 }
 .pagination__container-start {
   padding: 0 5px;
   box-shadow: 0 0 2px blue;
   margin: 0 5px;
+  cursor: pointer;
 }
 .pagination__container-prev{
-  padding: 0 5px;
-  box-shadow: 0 0 2px blue;
+  padding: 2px 5px;
+  /* box-shadow: 0 0 2px blue; */
   margin: 0 5px;
+  cursor: pointer;
 }
 
 .pagination__container-number span{
   padding: 0 5px;
   box-shadow: 0 0 2px blue;
   margin: 0 5px;
+  cursor: pointer;
+}
+.active {
+  background: blue;
+  color: white;
 }
 
 .pagination__container-next{
-  padding: 0 5px;
+  padding: 2px 5px;
   box-shadow: 0 0 2px blue;
   margin: 0 5px;
+  cursor: pointer;
 }
 
 .pagination__container-end{
   padding: 0 5px;
   box-shadow: 0 0 2px blue;
   margin: 0 5px;
+  cursor: pointer;
 }

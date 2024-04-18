@@ -17,8 +17,26 @@ const EmployeePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pageArray, setPageArray] = useState([]);
 
   useEffect(() => {
+    if (user && user?.token) {
+      getData();
+    }
+    // eslint-disable-next-line
+  }, [user?.token, currentPage]);
+
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    getData();
+  }, [currentPage > 1 && employeeData?.length === 0]);
+
+  const getData = async () => {
     if (user && user?.token) {
       const config = {
         headers: {
@@ -26,31 +44,33 @@ const EmployeePage = () => {
         },
       };
 
-      const getData = async () => {
-        try {
-          const { data } = await axios.get(
-            `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}`,
-            config
-          );
-          setEmployeeData(data?.data);
-          // Calculate total pages based on total count and items per page
-          const totalCount = data.total;
-          const totalPages = Math.ceil(totalCount / itemsPerPage);
-          setTotalPages(totalPages);
+      try {
+        console.log('object : ', currentPage, itemsPerPage);
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}`,
+          config
+        );
+        setEmployeeData(data?.data);
+        // Calculate total pages based on total count and items per page
+        const totalCount = data.total;
+        const totalPages = Math.ceil(totalCount / itemsPerPage);
+        setTotalPages(totalPages);
 
-          console.log('data: ', data);
-          console.log('totalPages: ', totalPages);
-        } catch (error) {
-          toast.error(
-            error?.response?.data?.message || 'Failed to fetch employee data'
-          );
-        }
-      };
+        const pageNumbers = Array.from(
+          { length: totalPages },
+          (_, index) => index + 1
+        );
+        setPageArray([...pageNumbers]);
 
-      getData();
+        console.log('data: ', data);
+        console.log('totalPages: ', totalPages, currentPage);
+      } catch (error) {
+        toast.error(
+          error?.response?.data?.message || 'Failed to fetch employee data'
+        );
+      }
     }
-    // eslint-disable-next-line
-  }, [user?.token, currentPage]);
+  };
 
   const createHandler = () => {
     setShowCreatePopup(true);
@@ -64,8 +84,10 @@ const EmployeePage = () => {
       <div className="create-employee-button">
         <button onClick={createHandler}>Create an employee</button>
       </div>
-
-      {employeeData?.length === 0 ? (
+      {currentPage > 1 && employeeData?.length === 0 && (
+        <h3>Reload for data...</h3>
+      )}
+      {currentPage === 1 && employeeData?.length === 0 ? (
         <h3>Loading...</h3>
       ) : (
         <EmployeeTable
@@ -79,6 +101,10 @@ const EmployeePage = () => {
       <Pagination
         itemsPerPage={itemsPerPage}
         setItemsPerPage={setItemsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
+        pageArray={pageArray}
       />
 
       {showCreatePopup && (
@@ -88,6 +114,7 @@ const EmployeePage = () => {
           create={true}
           setEmployeeData={setEmployeeData}
           employeeData={employeeData}
+          itemsPerPage={itemsPerPage}
         >
           {/* Pass any props or data required by the Popup component */}
           {/* You can pass editEmployee data to prefill the form */}

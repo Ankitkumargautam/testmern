@@ -19,6 +19,9 @@ const EmployeePage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pageArray, setPageArray] = useState([]);
 
+  const [sortBy, setSortBy] = useState('name');
+  const [sortValue, setSortValue] = useState(1);
+
   useEffect(() => {
     if (user && user?.token) {
       getData();
@@ -47,7 +50,7 @@ const EmployeePage = () => {
       try {
         console.log('object : ', currentPage, itemsPerPage);
         const { data } = await axios.get(
-          `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}`,
+          `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}&sortBy=${sortBy}&sortValue=${sortValue}`,
           config
         );
         setEmployeeData(data?.data);
@@ -95,6 +98,11 @@ const EmployeePage = () => {
           setEmployeeData={setEmployeeData}
           showEditPopup={showEditPopup}
           setShowEditPopup={setShowEditPopup}
+          getData={getData}
+          setSortBy={setSortBy}
+          setSortValue={setSortValue}
+          sortValue={sortValue}
+          sortBy={sortBy}
         />
       )}
 

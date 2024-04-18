@@ -35,3 +35,5 @@
 16. create a new employee page with pagination ui
 
 17. implemented pagination functionality in frontend
+
+18. implemented sorting in frontend

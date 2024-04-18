@@ -15,7 +15,7 @@ const Popup = ({
   currentId,
   setCurrentId,
   updateEmployeeData,
-  setUpdateEmployeeData,
+  // setUpdateEmployeeData,
   itemsPerPage,
 }) => {
   const popupRef = useRef(null);

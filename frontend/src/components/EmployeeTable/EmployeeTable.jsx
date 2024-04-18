@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ContextState } from '../../Context/ContextProvider';
 import './EmployeeTable.css';
@@ -10,6 +10,11 @@ const EmployeeTable = ({
   setEmployeeData,
   showEditPopup,
   setShowEditPopup,
+  getData,
+  setSortBy,
+  setSortValue,
+  sortValue,
+  sortBy,
 }) => {
   const { user } = ContextState();
 
@@ -21,6 +26,12 @@ const EmployeeTable = ({
 
   const [currentId, setCurrentId] = useState(0);
   const [updateEmployeeData, setUpdateEmployeeData] = useState({});
+
+  // Trigger sorting when sortBy or sortValue changes
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy, sortValue]);
 
   const editHandler = (employee) => {
     setShowEditPopup(true);
@@ -35,6 +46,7 @@ const EmployeeTable = ({
       );
 
       setEmployeeData(employees.filter((emp) => emp._id !== id));
+      getData();
       toast.success(data.message);
     } catch (error) {
       toast.error(
@@ -43,14 +55,56 @@ const EmployeeTable = ({
     }
   };
 
+  const sortTable = (sort) => {
+    console.log('sort: ', sort);
+    setSortBy(sort);
+    setSortValue(sortValue === 1 ? -1 : 1); // Toggle sort value
+  };
+
   return (
     <div className="employee-table-container">
       <table className="employee-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
+            <th>
+              <div
+                onClick={() => sortTable('name')}
+                style={{ cursor: 'pointer' }}
+              >
+                Name
+                {sortBy === 'name' && sortValue === 1 ? (
+                  <>&#708;</>
+                ) : (
+                  sortBy === 'name' && sortValue === -1 && <>&#709;</>
+                )}
+              </div>
+            </th>
+            <th>
+              <div
+                onClick={() => sortTable('email')}
+                style={{ cursor: 'pointer' }}
+              >
+                Email
+                {sortBy === 'email' && sortValue === 1 ? (
+                  <>&#708;</>
+                ) : (
+                  sortBy === 'email' && sortValue === -1 && <>&#709;</>
+                )}
+              </div>
+            </th>
+            <th>
+              <div
+                onClick={() => sortTable('phone')}
+                style={{ cursor: 'pointer' }}
+              >
+                Phone
+                {sortBy === 'phone' && sortValue === 1 ? (
+                  <>&#708;</>
+                ) : (
+                  sortBy === 'phone' && sortValue === -1 && <>&#709;</>
+                )}
+              </div>
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -80,7 +134,7 @@ const EmployeeTable = ({
           currentId={currentId}
           setCurrentId={setCurrentId}
           updateEmployeeData={updateEmployeeData}
-          setUpdateEmployeeData={setUpdateEmployeeData}
+          // setUpdateEmployeeData={setUpdateEmployeeData}
         >
           {/* Pass any props or data required by the Popup component */}
           {/* You can pass editEmployee data to prefill the form */}

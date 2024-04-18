@@ -22,6 +22,8 @@ const EmployeePage = () => {
   const [sortBy, setSortBy] = useState('name');
   const [sortValue, setSortValue] = useState(1);
 
+  const [searchKey, setSearchKey] = useState('');
+
   useEffect(() => {
     if (user && user?.token) {
       getData();
@@ -37,6 +39,7 @@ const EmployeePage = () => {
   useEffect(() => {
     setCurrentPage(1);
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage > 1 && employeeData?.length === 0]);
 
   const getData = async () => {
@@ -48,7 +51,6 @@ const EmployeePage = () => {
       };
 
       try {
-        console.log('object : ', currentPage, itemsPerPage);
         const { data } = await axios.get(
           `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}&sortBy=${sortBy}&sortValue=${sortValue}`,
           config
@@ -64,9 +66,6 @@ const EmployeePage = () => {
           (_, index) => index + 1
         );
         setPageArray([...pageNumbers]);
-
-        console.log('data: ', data);
-        console.log('totalPages: ', totalPages, currentPage);
       } catch (error) {
         toast.error(
           error?.response?.data?.message || 'Failed to fetch employee data'
@@ -79,13 +78,53 @@ const EmployeePage = () => {
     setShowCreatePopup(true);
   };
 
+  const searchHandler = async () => {
+    if (user && user?.token) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      };
+
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_BASEURL}/api/getEmpPage?page=${currentPage}&limit=${itemsPerPage}&sortBy=${sortBy}&sortValue=${sortValue}&search=${searchKey}`,
+          config
+        );
+        setEmployeeData(data?.data);
+        // Calculate total pages based on total count and items per page
+        const totalCount = data.total;
+        const totalPages = Math.ceil(totalCount / itemsPerPage);
+        setTotalPages(totalPages);
+
+        const pageNumbers = Array.from(
+          { length: totalPages },
+          (_, index) => index + 1
+        );
+        setPageArray([...pageNumbers]);
+      } catch (error) {
+        toast.error(
+          error?.response?.data?.message || 'Failed to fetch employee data'
+        );
+      }
+    }
+  };
+
   return (
-    <div>
+    <div className="employee-container">
       <h1>Employee</h1>
       <a href="/employee">go to Employee</a>
 
       <div className="create-employee-button">
         <button onClick={createHandler}>Create an employee</button>
+      </div>
+      <div className="search-employee">
+        <input
+          type="text"
+          value={searchKey}
+          onChange={(e) => setSearchKey(e.target.value)}
+        />
+        <button onClick={() => searchHandler()}>search</button>
       </div>
       {currentPage > 1 && employeeData?.length === 0 && (
         <h3>Reload for data...</h3>

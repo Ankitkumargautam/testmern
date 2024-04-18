@@ -36,11 +36,9 @@ const Pagination = ({
   };
 
   const currentPageHandler = async (pageNo) => {
-    console.log('page curr: ', pageNo);
     setCurrentPage(parseInt(pageNo));
   };
 
-  console.log(itemsPerPage, 'itemsss');
   return (
     <div className="pagination__container">
       {/* Dropdown for selecting limit */}
@@ -73,7 +71,6 @@ const Pagination = ({
       <div className="pagination__container-number">
         {pageArray.length < 6 &&
           pageArray.map((el) => {
-            console.log(el, 'dd');
             return (
               <span
                 className={currentPage === el ? 'active' : ''}
@@ -88,7 +85,6 @@ const Pagination = ({
           ? pageArray
               .slice(pageArray.length - 5, pageArray.length - 1)
               .map((el) => {
-                console.log(el, 'dd');
                 return (
                   <span
                     className={currentPage === el ? 'active' : ''}
@@ -102,7 +98,6 @@ const Pagination = ({
           : pageArray.length >= 6 &&
             currentPage !== pageArray.length &&
             pageArray.slice(currentPage - 1, currentPage + 3).map((el) => {
-              console.log(el, 'dd');
               return (
                 <span
                   className={currentPage === el ? 'active' : ''}

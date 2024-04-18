@@ -37,3 +37,5 @@
 17. implemented pagination functionality in frontend
 
 18. implemented sorting in frontend
+
+19. implemented searching in frontend

@@ -56,7 +56,6 @@ const EmployeeTable = ({
   };
 
   const sortTable = (sort) => {
-    console.log('sort: ', sort);
     setSortBy(sort);
     setSortValue(sortValue === 1 ? -1 : 1); // Toggle sort value
   };

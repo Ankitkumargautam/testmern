@@ -133,18 +133,64 @@ export const getEmpPage = async (req, res) => {
     const query = [
       { $match: { userId: req.user._id } },
       {
+        $lookup: {
+          from: 'users',
+          let: { userID: '$userId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ['$_id', '$$userID'], // Corrected order of fields
+                },
+              },
+            },
+            {
+              $project: {
+                name: 1,
+                email: 1,
+              },
+            },
+          ],
+          as: 'addedBy',
+        },
+      },
+      {
+        $unwind: { path: '$addedBy', preserveNullAndEmptyArrays: true },
+      },
+
+      // {
+      //   $lookup: {
+      //     from: 'users',
+      //     localField: 'userId',
+      //     foreignField: '_id',
+      //     as: 'addedBy',
+      //   },
+      // },
+      // { $unwind: '$addedBy' },
+
+      {
         $project: {
           _id: 1,
           name: 1,
           email: 1,
           phone: 1,
           userId: 1,
+          addedBy: 1,
           createdAt: 1,
           updatedAt: 1,
           insensitive: { $toLower: `$${sortBy}` }, // Project a new field "insensitive" with lowercased value of sortBy field
         },
       },
       { $sort: { insensitive: sortDirection } }, // Sort based on the new field "insensitive"
+      // {
+      //   $group: {
+      //     _id: '$createdAt',
+      //     root: { $first: '$$ROOT' },
+      //   },
+      // },
+      // {
+      //   $replaceRoot: { newRoot: '$root' },
+      // },
     ];
 
     if (payload.search && payload.search !== '') {
@@ -165,6 +211,9 @@ export const getEmpPage = async (req, res) => {
     // Calculate total count without pagination
     const total = await Employee.aggregate([...query, { $count: 'total' }]);
     const totalCount = total.length > 0 ? total[0].total : 0;
+
+    // const total = await Employee.find();
+    // const totalCount = total.length > 0 ? total.length : 0;
 
     return res.status(200).json({
       status: 200,

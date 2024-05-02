@@ -39,3 +39,5 @@
 18. implemented sorting in frontend
 
 19. implemented searching in frontend
+
+20. apply populate query
